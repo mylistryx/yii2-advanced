@@ -2,12 +2,14 @@
 
 namespace frontend\tests\functional;
 
+use Codeception\Exception\ModuleException;
 use common\fixtures\UserFixture;
+use common\models\Identity;
 use frontend\tests\FunctionalTester;
 
 class ResendVerificationEmailCest
 {
-    protected $formId = '#resend-verification-email-form';
+    protected string $formId = '#resend-verification-email-form';
 
 
     /**
@@ -17,7 +19,7 @@ class ResendVerificationEmailCest
      * @see \Codeception\Module\Yii2::loadFixtures()
      * @return array
      */
-    public function _fixtures()
+    public function _fixtures(): array
     {
         return [
             'user' => [
@@ -27,56 +29,59 @@ class ResendVerificationEmailCest
         ];
     }
 
-    public function _before(FunctionalTester $I)
+    public function _before(FunctionalTester $I): void
     {
         $I->amOnRoute('/site/resend-verification-email');
     }
 
-    protected function formParams($email)
+    protected function formParams($email): array
     {
         return [
             'ResendVerificationEmailForm[email]' => $email
         ];
     }
 
-    public function checkPage(FunctionalTester $I)
+    public function checkPage(FunctionalTester $I): void
     {
         $I->see('Resend verification email', 'h1');
         $I->see('Please fill out your email. A verification email will be sent there.');
     }
 
-    public function checkEmptyField(FunctionalTester $I)
+    public function checkEmptyField(FunctionalTester $I): void
     {
         $I->submitForm($this->formId, $this->formParams(''));
         $I->seeValidationError('Email cannot be blank.');
     }
 
-    public function checkWrongEmailFormat(FunctionalTester $I)
+    public function checkWrongEmailFormat(FunctionalTester $I): void
     {
         $I->submitForm($this->formId, $this->formParams('abcd.com'));
         $I->seeValidationError('Email is not a valid email address.');
     }
 
-    public function checkWrongEmail(FunctionalTester $I)
+    public function checkWrongEmail(FunctionalTester $I): void
     {
         $I->submitForm($this->formId, $this->formParams('wrong@email.com'));
         $I->seeValidationError('There is no user with this email address.');
     }
 
-    public function checkAlreadyVerifiedEmail(FunctionalTester $I)
+    public function checkAlreadyVerifiedEmail(FunctionalTester $I): void
     {
         $I->submitForm($this->formId, $this->formParams('test2@mail.com'));
         $I->seeValidationError('There is no user with this email address.');
     }
 
-    public function checkSendSuccessfully(FunctionalTester $I)
+    /**
+     * @throws ModuleException
+     */
+    public function checkSendSuccessfully(FunctionalTester $I): void
     {
         $I->submitForm($this->formId, $this->formParams('test@mail.com'));
         $I->canSeeEmailIsSent();
-        $I->seeRecord('common\models\Identity', [
+        $I->seeRecord(Identity::class, [
             'email' => 'test@mail.com',
             'username' => 'test.test',
-            'status' => \common\models\Identity::STATUS_INACTIVE
+            'status' => Identity::STATUS_INACTIVE
         ]);
         $I->see('Check your email for further instructions.');
     }

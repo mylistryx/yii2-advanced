@@ -1,5 +1,6 @@
 <?php
 
+use common\components\WebUser;
 use common\models\Identity;
 use yii\log\FileTarget;
 
@@ -20,6 +21,7 @@ return [
             'csrfParam' => '_csrf-frontend',
         ],
         'user' => [
+            'class' => WebUser::class,
             'identityClass' => Identity::class,
             'enableAutoLogin' => true,
             'identityCookie' => ['name' => '_identity-frontend', 'httpOnly' => true],
@@ -42,8 +44,7 @@ return [
         'urlManager' => [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
-            'rules' => [
-            ],
+            'rules' => require __DIR__ . '/frontRules.php',
         ],
     ],
     'params' => $params,

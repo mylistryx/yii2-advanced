@@ -2,7 +2,7 @@
 /**
  * @var View $this
  * @var ActiveForm $form
- * @var \common\forms\LoginForm $model
+ * @var LoginForm $model
  */
 
 use common\forms\LoginForm;

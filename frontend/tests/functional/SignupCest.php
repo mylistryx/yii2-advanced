@@ -2,19 +2,21 @@
 
 namespace frontend\tests\functional;
 
+use Codeception\Exception\ModuleException;
+use common\models\Identity;
 use frontend\tests\FunctionalTester;
 
 class SignupCest
 {
-    protected $formId = '#form-signup';
+    protected string $formId = '#form-signup';
 
 
-    public function _before(FunctionalTester $I)
+    public function _before(FunctionalTester $I): void
     {
         $I->amOnRoute('site/signup');
     }
 
-    public function signupWithEmptyFields(FunctionalTester $I)
+    public function signupWithEmptyFields(FunctionalTester $I): void
     {
         $I->see('Signup', 'h1');
         $I->see('Please fill out the following fields to signup:');
@@ -24,7 +26,7 @@ class SignupCest
         $I->seeValidationError('Password cannot be blank.');
     }
 
-    public function signupWithWrongEmail(FunctionalTester $I)
+    public function signupWithWrongEmail(FunctionalTester $I): void
     {
         $I->submitForm(
             $this->formId,
@@ -39,7 +41,10 @@ class SignupCest
         $I->see('Email is not a valid email address.', '.invalid-feedback');
     }
 
-    public function signupSuccessfully(FunctionalTester $I)
+    /**
+     * @throws ModuleException
+     */
+    public function signupSuccessfully(FunctionalTester $I): void
     {
         $I->submitForm($this->formId, [
             'SignupForm[username]' => 'tester',
@@ -47,10 +52,10 @@ class SignupCest
             'SignupForm[password]' => 'tester_password',
         ]);
 
-        $I->seeRecord('common\models\Identity', [
+        $I->seeRecord(Identity::class, [
             'username' => 'tester',
             'email' => 'tester.email@example.com',
-            'status' => \common\models\Identity::STATUS_INACTIVE
+            'status' => Identity::STATUS_INACTIVE
         ]);
 
         $I->seeEmailIsSent();
