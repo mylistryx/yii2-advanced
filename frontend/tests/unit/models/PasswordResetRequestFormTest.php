@@ -1,0 +1,58 @@
+<?php
+
+namespace frontend\tests\unit\models;
+
+use common\fixtures\UserFixture as UserFixture;
+use common\models\Identity;
+use frontend\forms\PasswordResetRequestForm;
+use frontend\tests\UnitTester;
+use Yii;
+use yii\mail\MessageInterface;
+
+class PasswordResetRequestFormTest extends \Codeception\Test\Unit
+{
+    protected UnitTester $tester;
+
+
+    public function _before(): void
+    {
+        $this->tester->haveFixtures([
+            'user' => [
+                'class' => UserFixture::class,
+                'dataFile' => codecept_data_dir() . 'user.php'
+            ]
+        ]);
+    }
+
+    public function testSendMessageWithWrongEmailAddress(): void
+    {
+        $model = new PasswordResetRequestForm();
+        $model->email = 'not-existing-email@example.com';
+        verify($model->sendEmail())->false();
+    }
+
+    public function testNotSendEmailsToInactiveUser(): void
+    {
+        $user = $this->tester->grabFixture('user', 1);
+        $model = new PasswordResetRequestForm();
+        $model->email = $user['email'];
+        verify($model->sendEmail())->false();
+    }
+
+    public function testSendEmailSuccessfully(): void
+    {
+        $userFixture = $this->tester->grabFixture('user', 0);
+
+        $model = new PasswordResetRequestForm();
+        $model->email = $userFixture['email'];
+        $user = Identity::findOne(['password_reset_token' => $userFixture['password_reset_token']]);
+
+        verify($model->sendEmail())->notEmpty();
+        verify($user->password_reset_token)->notEmpty();
+
+        $emailMessage = $this->tester->grabLastSentEmail();
+        verify($emailMessage)->instanceOf(MessageInterface::class);
+        verify($emailMessage->getTo())->arrayHasKey($model->email);
+        verify($emailMessage->getFrom())->arrayHasKey(Yii::$app->params['supportEmail']);
+    }
+}
