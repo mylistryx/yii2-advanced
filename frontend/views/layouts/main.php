@@ -30,7 +30,7 @@ $menuItemsRight = [
                 'visible' => Yii::$app->user->isGuest,
         ],
         [
-                'label' => 'Logout',
+                'label' => 'Logout (' . Yii::$app->user->identity?->username . ')',
                 'url' => ['/auth/logout'],
                 'visible' => !Yii::$app->user->isGuest,
                 'linkOptions' => ['data-method' => 'post'],

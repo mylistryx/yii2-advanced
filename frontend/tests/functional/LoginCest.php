@@ -59,7 +59,7 @@ class LoginCest
     public function checkValidLogin(FunctionalTester $I): void
     {
         $I->submitForm('#login-form', $this->formParams('erau', 'password_0'));
-        $I->seeLink('Logout','logout');
+        $I->seeLink('Logout (erau)','logout');
         $I->dontSeeLink('Login');
         $I->dontSeeLink('Signup');
     }
