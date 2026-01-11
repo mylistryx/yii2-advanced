@@ -17,7 +17,14 @@ class ContactForm extends Model
     public function rules(): array
     {
         return [
-            [['name', 'email', 'subject', 'body'], 'required'],
+            [
+                [
+                    'name',
+                    'email',
+                    'subject',
+                    'body',
+                ],
+                'required'],
             ['email', 'email'],
             ['verifyCode', 'captcha'],
         ];

@@ -21,7 +21,7 @@ $menuItemsLeft = [
 $menuItemsRight = [
         [
                 'label' => 'Signup',
-                'url' => ['/site/signup'],
+                'url' => ['/signup/request'],
                 'visible' => Yii::$app->user->isGuest,
         ],
         [

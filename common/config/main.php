@@ -1,5 +1,6 @@
 <?php
 
+use yii\i18n\PhpMessageSource;
 use yii\queue\redis\Queue;
 use yii\redis\Cache;
 use yii\redis\Session;
@@ -22,6 +23,13 @@ return [
         ],
         'queue' => [
             'class' => Queue::class,
+        ],
+        'i18n' => [
+            'translations' => [
+                '*' => [
+                    'class' => PhpMessageSource::class,
+                ],
+            ],
         ],
     ],
 ];

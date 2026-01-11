@@ -19,26 +19,26 @@ class PasswordResetRequestForm extends Model
             ['email', 'exist',
                 'targetClass' => Identity::class,
                 'filter' => ['status' => Identity::STATUS_ACTIVE],
-                'message' => 'There is no user with this email address.'
+                'message' => 'There is no user with this email address.',
             ],
         ];
     }
 
     public function sendEmail(): bool
     {
-        /* @var $user Identity */
-        $user = Identity::findOne([
+        /* @var $identity Identity */
+        $identity = Identity::findOne([
             'status' => Identity::STATUS_ACTIVE,
             'email' => $this->email,
         ]);
 
-        if (!$user) {
+        if (!$identity) {
             return false;
         }
 
-        if (!Identity::isPasswordResetTokenValid($user->password_reset_token)) {
-            $user->generatePasswordResetToken();
-            if (!$user->save()) {
+        if (!Identity::isPasswordResetTokenValid($identity->password_reset_token)) {
+            $identity->generatePasswordResetToken();
+            if (!$identity->save()) {
                 return false;
             }
         }
@@ -46,8 +46,13 @@ class PasswordResetRequestForm extends Model
         return Yii::$app
             ->mailer
             ->compose(
-                ['html' => 'passwordResetToken-html', 'text' => 'passwordResetToken-text'],
-                ['user' => $user]
+                [
+                    'html' => 'passwordResetToken-html',
+                    'text' => 'passwordResetToken-text',
+                ],
+                [
+                    'identity' => $identity,
+                ],
             )
             ->setFrom([Yii::$app->params['supportEmail'] => Yii::$app->name . ' robot'])
             ->setTo($this->email)

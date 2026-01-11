@@ -19,27 +19,32 @@ class ResendVerificationEmailForm extends Model
             ['email', 'exist',
                 'targetClass' => Identity::class,
                 'filter' => ['status' => Identity::STATUS_INACTIVE],
-                'message' => 'There is no user with this email address.'
+                'message' => 'There is no user with this email address.',
             ],
         ];
     }
 
     public function sendEmail(): bool
     {
-        $user = Identity::findOne([
+        $identity = Identity::findOne([
             'email' => $this->email,
-            'status' => Identity::STATUS_INACTIVE
+            'status' => Identity::STATUS_INACTIVE,
         ]);
 
-        if ($user === null) {
+        if ($identity === null) {
             return false;
         }
 
         return Yii::$app
             ->mailer
             ->compose(
-                ['html' => 'emailVerify-html', 'text' => 'emailVerify-text'],
-                ['user' => $user]
+                [
+                    'html' => 'emailVerify-html',
+                    'text' => 'emailVerify-text',
+                ],
+                [
+                    'identity' => $identity,
+                ],
             )
             ->setFrom([Yii::$app->params['supportEmail'] => Yii::$app->name . ' robot'])
             ->setTo($this->email)

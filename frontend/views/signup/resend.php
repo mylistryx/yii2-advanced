@@ -11,6 +11,7 @@ use yii\bootstrap5\Html;
 use yii\web\View;
 
 $this->title = 'Resend verification email';
+$this->params['breadcrumbs'][] = ['label' => 'Signup', 'url' => ['/signup/index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="site-resend-verification-email">

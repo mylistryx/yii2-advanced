@@ -1,15 +1,15 @@
 <?php
 /**
  * @var View $this
- * @var Identity $user
+ * @var Identity $identity
  */
 
 use common\models\Identity;
 use yii\web\View;
 
-$verifyLink = Yii::$app->urlManager->createAbsoluteUrl(['site/verify-email', 'token' => $user->verification_token]);
+$verifyLink = Yii::$app->urlManager->createAbsoluteUrl(['signup/verify', 'token' => $identity->verification_token]);
 ?>
-Hello <?= $user->username ?>,
+Hello <?= $identity->username ?>,
 
 Follow the link below to verify your email:
 

@@ -2,15 +2,16 @@
 
 namespace frontend\forms;
 
+use common\components\forms\Form;
 use common\models\Identity;
 use Yii;
-use yii\base\Model;
+use yii\db\Exception;
 
-class SignupForm extends Model
+class SignupForm extends Form
 {
     public ?string $username = null;
     public ?string $email = null;
-    public ?string $password  = null;
+    public ?string $password = null;
 
 
     public function rules(): array
@@ -32,29 +33,38 @@ class SignupForm extends Model
         ];
     }
 
+    /**
+     * @throws Exception
+     * @throws \yii\base\Exception
+     */
     public function signup(): ?bool
     {
         if (!$this->validate()) {
             return null;
         }
 
-        $user = new Identity();
-        $user->username = $this->username;
-        $user->email = $this->email;
-        $user->setPassword($this->password);
-        $user->generateAuthKey();
-        $user->generateEmailVerificationToken();
+        $identity = new Identity();
+        $identity->username = $this->username;
+        $identity->email = $this->email;
+        $identity->setPassword($this->password);
+        $identity->generateAuthKey();
+        $identity->generateEmailVerificationToken();
 
-        return $user->save() && $this->sendEmail($user);
+        return $identity->save() && $this->sendEmail($identity);
     }
 
-    protected function sendEmail($user): bool
+    protected function sendEmail($identity): bool
     {
         return Yii::$app
             ->mailer
             ->compose(
-                ['html' => 'emailVerify-html', 'text' => 'emailVerify-text'],
-                ['user' => $user]
+                [
+                    'html' => 'emailVerify-html',
+                    'text' => 'emailVerify-text',
+                ],
+                [
+                    'identity' => $identity,
+                ],
             )
             ->setFrom([Yii::$app->params['supportEmail'] => Yii::$app->name . ' robot'])
             ->setTo($this->email)
