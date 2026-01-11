@@ -3,6 +3,7 @@
 namespace frontend\tests\functional;
 
 use Codeception\Exception\ModuleException;
+use common\enums\IdentityStatus;
 use common\models\Identity;
 use frontend\tests\FunctionalTester;
 
@@ -31,10 +32,10 @@ class SignupCest
         $I->submitForm(
             $this->formId,
             [
-                'SignupForm[username]'  => 'tester',
-                'SignupForm[email]'     => 'ttttt',
-                'SignupForm[password]'  => 'tester_password',
-            ]
+                'SignupForm[username]' => 'tester',
+                'SignupForm[email]' => 'ttttt',
+                'SignupForm[password]' => 'tester_password',
+            ],
         );
         $I->dontSee('Username cannot be blank.', '.invalid-feedback');
         $I->dontSee('Password cannot be blank.', '.invalid-feedback');
@@ -55,7 +56,7 @@ class SignupCest
         $I->seeRecord(Identity::class, [
             'username' => 'tester',
             'email' => 'tester.email@example.com',
-            'status' => Identity::STATUS_INACTIVE
+            'status' => IdentityStatus::Inactive->value,
         ]);
 
         $I->seeEmailIsSent();

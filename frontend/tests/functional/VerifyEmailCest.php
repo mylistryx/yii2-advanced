@@ -2,6 +2,7 @@
 
 namespace frontend\tests\functional;
 
+use common\enums\IdentityStatus;
 use common\fixtures\UserFixture;
 use common\models\Identity;
 use frontend\tests\FunctionalTester;
@@ -62,7 +63,7 @@ class VerifyEmailCest
         $I->seeRecord(Identity::class, [
             'username' => 'test.test',
             'email' => 'test@mail.com',
-            'status' => Identity::STATUS_ACTIVE,
+            'status' => IdentityStatus::Active->value,
         ]);
     }
 }

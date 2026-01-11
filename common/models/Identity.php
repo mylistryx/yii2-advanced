@@ -2,6 +2,7 @@
 
 namespace common\models;
 
+use common\enums\IdentityStatus;
 use Yii;
 use yii\base\Exception;
 use yii\base\NotSupportedException;
@@ -26,9 +27,6 @@ use yii\web\IdentityInterface;
  */
 class Identity extends ActiveRecord implements IdentityInterface
 {
-    public const int STATUS_DELETED = 0;
-    public const int STATUS_INACTIVE = 9;
-    public const int STATUS_ACTIVE = 10;
     /**
      * {@inheritdoc}
      */
@@ -53,8 +51,8 @@ class Identity extends ActiveRecord implements IdentityInterface
     public function rules(): array
     {
         return [
-            ['status', 'default', 'value' => self::STATUS_INACTIVE],
-            ['status', 'in', 'range' => [self::STATUS_ACTIVE, self::STATUS_INACTIVE, self::STATUS_DELETED]],
+            ['status', 'default', 'value' => IdentityStatus::Inactive->value],
+            ['status', 'in', 'range' => IdentityStatus::values()],
         ];
     }
 
@@ -63,7 +61,7 @@ class Identity extends ActiveRecord implements IdentityInterface
      */
     public static function findIdentity($id)
     {
-        return static::findOne(['id' => $id, 'status' => self::STATUS_ACTIVE]);
+        return static::findOne(['id' => $id, 'status' => IdentityStatus::Active->value]);
     }
 
     /**
@@ -80,9 +78,12 @@ class Identity extends ActiveRecord implements IdentityInterface
      * @param string $username
      * @return static|null
      */
-    public static function findByUsername($username)
+    public static function findByUsername($username): ?static
     {
-        return static::findOne(['username' => $username, 'status' => self::STATUS_ACTIVE]);
+        return static::findOne([
+            'username' => $username,
+            'status' => IdentityStatus::Active->value,
+        ]);
     }
 
     /**
@@ -99,7 +100,7 @@ class Identity extends ActiveRecord implements IdentityInterface
 
         return static::findOne([
             'password_reset_token' => $token,
-            'status' => self::STATUS_ACTIVE,
+            'status' => IdentityStatus::Active->value,
         ]);
     }
 
@@ -113,7 +114,7 @@ class Identity extends ActiveRecord implements IdentityInterface
     {
         return static::findOne([
             'verification_token' => $token,
-            'status' => self::STATUS_INACTIVE
+            'status' => IdentityStatus::Inactive->value,
         ]);
     }
 
@@ -129,7 +130,7 @@ class Identity extends ActiveRecord implements IdentityInterface
             return false;
         }
 
-        $timestamp = (int) substr($token, strrpos($token, '_') + 1);
+        $timestamp = (int)substr($token, strrpos($token, '_') + 1);
         $expire = Yii::$app->params['user.passwordResetTokenExpire'];
         return $timestamp + $expire >= time();
     }

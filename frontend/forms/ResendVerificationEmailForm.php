@@ -2,6 +2,7 @@
 
 namespace frontend\forms;
 
+use common\enums\IdentityStatus;
 use common\models\Identity;
 use Yii;
 use yii\base\Model;
@@ -18,7 +19,7 @@ class ResendVerificationEmailForm extends Model
             ['email', 'email'],
             ['email', 'exist',
                 'targetClass' => Identity::class,
-                'filter' => ['status' => Identity::STATUS_INACTIVE],
+                'filter' => ['status' => IdentityStatus::Inactive->value],
                 'message' => 'There is no user with this email address.',
             ],
         ];
@@ -28,7 +29,7 @@ class ResendVerificationEmailForm extends Model
     {
         $identity = Identity::findOne([
             'email' => $this->email,
-            'status' => Identity::STATUS_INACTIVE,
+            'status' => IdentityStatus::Inactive->value,
         ]);
 
         if ($identity === null) {

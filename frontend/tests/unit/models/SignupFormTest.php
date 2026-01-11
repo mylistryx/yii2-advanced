@@ -3,6 +3,7 @@
 namespace frontend\tests\unit\models;
 
 use Codeception\Test\Unit;
+use common\enums\IdentityStatus;
 use common\fixtures\UserFixture;
 use frontend\forms\SignupForm;
 use frontend\tests\UnitTester;
@@ -20,8 +21,8 @@ class SignupFormTest extends Unit
         $this->tester->haveFixtures([
             'user' => [
                 'class' => UserFixture::class,
-                'dataFile' => codecept_data_dir() . 'user.php'
-            ]
+                'dataFile' => codecept_data_dir() . 'user.php',
+            ],
         ]);
     }
 
@@ -40,7 +41,7 @@ class SignupFormTest extends Unit
         $user = $this->tester->grabRecord(Identity::class, [
             'username' => 'some_username',
             'email' => 'some_email@example.com',
-            'status' => Identity::STATUS_INACTIVE
+            'status' => IdentityStatus::Inactive->value,
         ]);
 
         $this->tester->seeEmailIsSent();

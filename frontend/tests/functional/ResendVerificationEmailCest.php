@@ -3,6 +3,7 @@
 namespace frontend\tests\functional;
 
 use Codeception\Exception\ModuleException;
+use common\enums\IdentityStatus;
 use common\fixtures\UserFixture;
 use common\models\Identity;
 use frontend\tests\FunctionalTester;
@@ -15,9 +16,9 @@ class ResendVerificationEmailCest
     /**
      * Load fixtures before db transaction begin
      * Called in _before()
-     * @see \Codeception\Module\Yii2::_before()
-     * @see \Codeception\Module\Yii2::loadFixtures()
      * @return array
+     * @see \Codeception\Module\Yii2::loadFixtures()
+     * @see \Codeception\Module\Yii2::_before()
      */
     public function _fixtures(): array
     {
@@ -37,7 +38,7 @@ class ResendVerificationEmailCest
     protected function formParams($email): array
     {
         return [
-            'ResendVerificationEmailForm[email]' => $email
+            'ResendVerificationEmailForm[email]' => $email,
         ];
     }
 
@@ -81,7 +82,7 @@ class ResendVerificationEmailCest
         $I->seeRecord(Identity::class, [
             'email' => 'test@mail.com',
             'username' => 'test.test',
-            'status' => Identity::STATUS_INACTIVE
+            'status' => IdentityStatus::Inactive->value,
         ]);
         $I->see('Check your email for further instructions.');
     }

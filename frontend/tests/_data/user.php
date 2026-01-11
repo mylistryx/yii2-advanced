@@ -1,5 +1,7 @@
 <?php
 
+use common\enums\IdentityStatus;
+
 return [
     [
         'username' => 'okirlin',
@@ -18,7 +20,7 @@ return [
         'created_at' => '1391885313',
         'updated_at' => '1391885313',
         'email' => 'nicolas.dianna@hotmail.com',
-        'status' => '0',
+        'status' => IdentityStatus::Deleted->value,
     ],
     [
         'username' => 'test.test',
@@ -26,7 +28,7 @@ return [
         //Test1234
         'password_hash' => '$2y$13$d17z0w/wKC4LFwtzBcmx6up4jErQuandJqhzKGKczfWuiEhLBtQBK',
         'email' => 'test@mail.com',
-        'status' => '9',
+        'status' => IdentityStatus::Inactive->value,
         'created_at' => '1548675330',
         'updated_at' => '1548675330',
         'verification_token' => '4ch0qbfhvWwkcuWqjN8SWRq72SOw1KYT_1548675330',
@@ -37,7 +39,7 @@ return [
         //Test1234
         'password_hash' => '$2y$13$d17z0w/wKC4LFwtzBcmx6up4jErQuandJqhzKGKczfWuiEhLBtQBK',
         'email' => 'test2@mail.com',
-        'status' => '10',
+        'status' => IdentityStatus::Active->value,
         'created_at' => '1548675330',
         'updated_at' => '1548675330',
         'verification_token' => 'already_used_token_1548675330',

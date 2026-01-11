@@ -2,6 +2,7 @@
 
 namespace frontend\forms;
 
+use common\enums\IdentityStatus;
 use common\components\forms\Form;
 use common\models\Identity;
 use yii\base\InvalidArgumentException;
@@ -30,7 +31,7 @@ class VerifyEmailForm extends Form
     public function verifyEmail(): ?Identity
     {
         $identity = $this->_identity;
-        $identity->status = Identity::STATUS_ACTIVE;
+        $identity->status = IdentityStatus::Active->value;
         return $identity->save(false) ? $identity : null;
     }
 }

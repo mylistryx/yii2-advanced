@@ -2,6 +2,7 @@
 
 namespace frontend\forms;
 
+use common\enums\IdentityStatus;
 use common\models\Identity;
 use Yii;
 use yii\base\Model;
@@ -18,7 +19,7 @@ class PasswordResetRequestForm extends Model
             ['email', 'email'],
             ['email', 'exist',
                 'targetClass' => Identity::class,
-                'filter' => ['status' => Identity::STATUS_ACTIVE],
+                'filter' => ['status' => IdentityStatus::Active->value],
                 'message' => 'There is no user with this email address.',
             ],
         ];
@@ -28,7 +29,7 @@ class PasswordResetRequestForm extends Model
     {
         /* @var $identity Identity */
         $identity = Identity::findOne([
-            'status' => Identity::STATUS_ACTIVE,
+            'status' => IdentityStatus::Active->value,
             'email' => $this->email,
         ]);
 
