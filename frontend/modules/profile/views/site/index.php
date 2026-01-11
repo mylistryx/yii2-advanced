@@ -3,6 +3,7 @@
  * @var View $this
  */
 
+use yii\bootstrap5\Html;
 use yii\web\View;
 
 $this->title = 'My profile';
@@ -15,6 +16,6 @@ $this->params['breadcrumbs'][] = $this->title;
         </div>
     </div>
     <div class="body-content">
-
+        <?= Html::a('Edit Profile', ['edit'], ['class' => 'btn btn-primary']) ?>
     </div>
 </div>

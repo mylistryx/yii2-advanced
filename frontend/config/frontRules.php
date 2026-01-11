@@ -1,4 +1,7 @@
 <?php
+
+use yii\web\GroupUrlRule;
+
 return [
     '' => 'site/index',
     'about' => 'site/about',
@@ -14,5 +17,11 @@ return [
     'password-reset/request' => 'password-reset/request',
     'password-reset/reset' => 'password-reset/reset',
 
-    'profile' => 'profile/site/index',
+    new GroupUrlRule([
+        'prefix' => 'profile',
+        'rules' => [
+            '' => 'site/index',
+            'edit' => 'site/edit',
+        ],
+    ]),
 ];
