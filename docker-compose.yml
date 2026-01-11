@@ -1,9 +1,10 @@
 services:
 
   api:
+    container_name: api
     build: backend
     ports:
-      - 20080:80
+      - "20080:80"
     volumes:
       # Re-use local composer cache via host-volume
       - ~/.composer-docker/cache:/root/.composer/cache:delegated
@@ -11,9 +12,10 @@ services:
       - ./:/app
 
   backend:
+    container_name: backend
     build: backend
     ports:
-      - 21080:80
+      - "21080:80"
     volumes:
       # Re-use local composer cache via host-volume
       - ~/.composer-docker/cache:/root/.composer/cache:delegated
@@ -21,9 +23,10 @@ services:
       - ./:/app
 
   frontend:
+    container_name: frontend
     build: frontend
     ports:
-      - 22080:80
+      - "22080:80"
     volumes:
       # Re-use local composer cache via host-volume
       - ~/.composer-docker/cache:/root/.composer/cache:delegated
@@ -31,6 +34,7 @@ services:
       - ./:/app
 
   mysql:
+    container_name: mysql
     image: mysql:9.5
     environment:
       - MYSQL_ROOT_PASSWORD=verysecret
@@ -41,11 +45,19 @@ services:
       --character-set-server=utf8mb4
       --collation-server=utf8mb4_0900_ai_ci
     ports:
-      - 3307:3306
+      - "3306:3306"
 
-  #pgsql:
-  #  image: postgres:9.5
-  #  environment:
-  #    - POSTGRES_DB=yii2advanced
-  #    - POSTGRES_USER=yii2advanced
-  #    - POSTGRES_PASSWORD=secret
+  redis:
+    container_name: redis
+    image: redis:alpine
+    restart: always
+    ports:
+      - "6379:6379"
+
+  pgsql:
+    container_name: postgres
+    image: postgres:18
+    environment:
+      - POSTGRES_DB=yii2advanced
+      - POSTGRES_USER=yii2advanced
+      - POSTGRES_PASSWORD=secret

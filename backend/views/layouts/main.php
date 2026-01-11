@@ -17,14 +17,14 @@ AppAsset::register($this);
 $menuItemsLeft = [
         [
                 'label' => 'Home',
-                'url' => ['/site/index'],
+                'url' => ['site/index'],
         ],
 ];
 
 $menuItemsRight = [
         [
                 'label' => 'Logout (' . Yii::$app->user->identity?->username . ')',
-                'url' => ['/site/logout'],
+                'url' => ['auth/logout'],
                 'visible' => !Yii::$app->user->isGuest,
                 'linkOptions' => ['data-method' => 'post']],
 ];
