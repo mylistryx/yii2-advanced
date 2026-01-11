@@ -1,6 +1,6 @@
 <?php
 
-use yii\db\Migration;
+use common\components\migrations\Migration;
 
 class m130524_201442_init extends Migration
 {
@@ -22,6 +22,6 @@ class m130524_201442_init extends Migration
 
     public function safeDown(): void
     {
-        $this->dropTable('{{%user}}');
+        $this->dropTable('identity');
     }
 }
