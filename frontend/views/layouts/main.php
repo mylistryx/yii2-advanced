@@ -20,6 +20,14 @@ $menuItemsLeft = [
 
 $menuItemsRight = [
         [
+                'label' => 'Profile',
+                'items' => [
+                        ['label' => 'My Profile', 'url' => ['/profile/site/index']],
+                ],
+                'visible' => !Yii::$app->user->isGuest,
+                'active' => Yii::$app->controller->module->id == 'profile',
+        ],
+        [
                 'label' => 'Signup',
                 'url' => ['/signup/request'],
                 'visible' => Yii::$app->user->isGuest,
@@ -35,6 +43,7 @@ $menuItemsRight = [
                 'visible' => !Yii::$app->user->isGuest,
                 'linkOptions' => ['data-method' => 'post'],
         ],
+
 ];
 
 AppAsset::register($this);

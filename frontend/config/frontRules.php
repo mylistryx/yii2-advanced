@@ -13,4 +13,6 @@ return [
 
     'password-reset/request' => 'password-reset/request',
     'password-reset/reset' => 'password-reset/reset',
+
+    'profile' => 'profile/site/index',
 ];

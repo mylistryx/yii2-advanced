@@ -2,6 +2,7 @@
 
 use common\components\WebUser;
 use common\models\Identity;
+use frontend\modules\profile\ProfileModule;
 use yii\log\FileTarget;
 
 $params = array_merge(
@@ -16,6 +17,11 @@ return [
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log'],
     'controllerNamespace' => 'frontend\controllers',
+    'modules' => [
+        'profile' => [
+            'class' => ProfileModule::class,
+        ]
+    ],
     'components' => [
         'request' => [
             'csrfParam' => '_csrf-frontend',
